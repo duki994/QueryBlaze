@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using QueryableProcessor.Data.Context;
-using QueryBlaze.Processor;
+using QueryBlaze.Processor.Abstractions;
 using QueryBlaze.Processor.Implementation;
 
 namespace QueryableProcessor
@@ -27,7 +27,8 @@ namespace QueryableProcessor
             services.AddControllers();
 
             services.AddTransient<ISortQueryProcessor, SortQueryProcessor>();
-            services.AddTransient<ISortProcessorOptionsProvider, SortProcessorOptionsProvider>();
+            services.AddTransient<ICustomPropertyMapper, DefaultCustomPropertyMapper>();
+            services.AddTransient<ISortProcessorOptionsProvider, DefaultSortProcessorOptionsProvider>();
 
             services.AddDbContext<TestDbContext>();
         }

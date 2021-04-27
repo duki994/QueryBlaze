@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using QueryableProcessor.Data.Context;
 
 using QueryBlaze.Processor;
-
+using QueryBlaze.Processor.Abstractions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,15 +13,15 @@ namespace QueryableProcessor.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class TestController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
         private readonly TestDbContext _context;
         private readonly ISortQueryProcessor _processor;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, TestDbContext context, ISortQueryProcessor processor)
+        public TestController(
+            TestDbContext context,
+            ISortQueryProcessor processor)
         {
-            _logger = logger;
             _context = context;
             _processor = processor;
         }
@@ -31,7 +31,7 @@ namespace QueryableProcessor.Controllers
         {
             await _context.Database.EnsureCreatedAsync();
             var query = _context.People.AsQueryable();
-            
+
             var sortParams = new SortParams();
             sortParams.SortProperties.AddRange(sort);
 

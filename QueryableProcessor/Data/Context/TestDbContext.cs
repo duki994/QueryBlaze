@@ -5,10 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace QueryableProcessor.Data.Context
 {
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
     public class TestDbContext : DbContext
     {
-        public DbSet<Person> People { get; set; }
+        public DbSet<Person> People => Set<Person>();
 
         protected override void OnConfiguring([NotNull] DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,7 +26,6 @@ namespace QueryableProcessor.Data.Context
             modelBuilder.ApplyConfiguration(new AddressConfig());
         }
     }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
     public class Person
     {

@@ -1,24 +1,33 @@
-﻿using System;
+﻿using QueryBlaze.Processor.Abstractions;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace QueryBlaze.Processor
 {
-    public static class ReflectionUtilities
+    internal class ReflectionUtilities
     {
+        private readonly ISortProcessorOptionsProvider _optionsProvider;
+
+        public ReflectionUtilities(ISortProcessorOptionsProvider optionsProvider)
+        {
+            _optionsProvider = optionsProvider;
+        }
+
         /// <summary>
         /// Finds property info regardless of <paramref name="propertyName"/> casing
         /// </summary>
         /// <param name="elementType"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static PropertyInfo? GetPropertyInfo(Type elementType, string propertyName)
+        public PropertyInfo? GetPropertyInfo(Type elementType, string propertyName)
         {
             return elementType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
         }
 
-        public static LambdaExpression CreateExpression(Type elementType, PropertyInfo info)
+        public LambdaExpression CreateExpression(Type elementType, PropertyInfo info)
         {
             var parameter = Expression.Parameter(elementType, "x");
 
@@ -27,21 +36,21 @@ namespace QueryBlaze.Processor
             return Expression.Lambda(body, parameter);
         }
 
-        public static (string propertyName, bool descending) GetPropertyNameAndSortOrder(string sortPropertyParameter, string descendingIndicator)
+        public (string propertyName, bool descending) GetPropertyNameAndSortOrder(string sortPropertyParameter)
         {
+            var opts = _optionsProvider.Provide();
             string name = sortPropertyParameter;
 
-            var indicatorIndex = sortPropertyParameter.IndexOf(descendingIndicator, StringComparison.Ordinal);
+            var indicatorIndex = sortPropertyParameter.IndexOf(opts.DescendingIndicator, StringComparison.Ordinal);
             bool descending = indicatorIndex != -1;
-            if (descending)
-            {
-                name = sortPropertyParameter.Substring(0, indicatorIndex);
-            }
+
+            var regex = new Regex(opts.StripCharsPattern);
+            name = regex.Replace(name, string.Empty);
 
             return (name, descending);
         }
 
-        public static string GetOrderMethodName(SortInfo sortInfo)
+        public string GetOrderMethodName(SortInfo sortInfo)
         {
             if (sortInfo.IsFirst)
             {

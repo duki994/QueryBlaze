@@ -5,28 +5,35 @@ namespace QueryBlaze.Processor
 {
     public struct MapperKey : IEquatable<MapperKey>
     {
-        public string PropertyName { get; }
+        public string SortPropertyName { get; }
         public Type EntityType { get; }
 
         public MapperKey(string propertyName, Type entityType)
         {
-            PropertyName = propertyName;
+            SortPropertyName = propertyName;
             EntityType = entityType;
         }
 
 
         public bool Equals([AllowNull] MapperKey other) =>
             other.EntityType == EntityType
-                && string.Equals(other.PropertyName, PropertyName, StringComparison.OrdinalIgnoreCase);
+                && string.Equals(other.SortPropertyName, SortPropertyName, StringComparison.OrdinalIgnoreCase);
 
         public override bool Equals(object? obj) => obj is MapperKey other &&
-                other.EntityType == EntityType && string.Equals(other.PropertyName, PropertyName, StringComparison.OrdinalIgnoreCase);
+                other.EntityType == EntityType && string.Equals(other.SortPropertyName, SortPropertyName, StringComparison.OrdinalIgnoreCase);
 
-        public override int GetHashCode() => HashCode.Combine(PropertyName, EntityType);
+        public override int GetHashCode() => HashCode.Combine(SortPropertyName, EntityType);
 
         public override string? ToString()
         {
-            return $"{EntityType.Name} + {PropertyName}";
+            return $"{EntityType.Name} + {SortPropertyName}";
         }
+
+        public void Deconstruct(out string propertyName, out Type entityType)
+        {
+            propertyName = SortPropertyName;
+            entityType = EntityType;
+        }
+
     }
 }

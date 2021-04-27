@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using QueryBlaze.Processor.Abstractions;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -8,11 +9,13 @@ namespace QueryBlaze.Processor.Implementation
     {
         private readonly SortProcessorOptions _options;
         private readonly ICustomPropertyMapper _customPropertyMapper;
+        private readonly ReflectionUtilities _reflectionUtilities;
 
         public SortQueryProcessor(ISortProcessorOptionsProvider provider, ICustomPropertyMapper customPropertyMapper)
         {
             _options = provider.Provide();
             _customPropertyMapper = customPropertyMapper;
+            _reflectionUtilities = new ReflectionUtilities(provider);
         }
 
         public IQueryable<TEntity> ApplySorting<TEntity>(IQueryable<TEntity> query, SortParams parameters)
@@ -26,11 +29,11 @@ namespace QueryBlaze.Processor.Implementation
 
             foreach (var info in infos)
             {
-                LambdaExpression lambda = ReflectionUtilities.CreateExpression(typeof(TEntity), info.AccessorInfo);
+                LambdaExpression lambda = _reflectionUtilities.CreateExpression(typeof(TEntity), info.AccessorInfo);
 
                 var newExpression = Expression.Call(
                     typeof(Queryable),
-                    ReflectionUtilities.GetOrderMethodName(info),
+                    _reflectionUtilities.GetOrderMethodName(info),
                     new[] { typeof(TEntity), info.AccessorInfo.PropertyType },
                     query.Expression,
                     Expression.Quote(lambda)
@@ -45,16 +48,16 @@ namespace QueryBlaze.Processor.Implementation
         private ICollection<SortInfo> GetSortPropertyInfos<TEntity>(SortParams sortParams) =>
             sortParams.SortProperties
                 .Select(
-                    x => _customPropertyMapper.SortNameToPropertyNameMap.TryGetValue(new MapperKey(x, typeof(TEntity)), out string propName) 
-                            ? propName 
+                    x => _customPropertyMapper.SortNameToPropertyNameMap.TryGetValue(new MapperKey(x, typeof(TEntity)), out string propName)
+                            ? propName
                             : x
                 )
                 .Select(
-                    x => ReflectionUtilities.GetPropertyNameAndSortOrder(x, _options.DescendingIndicator)
+                    x => _reflectionUtilities.GetPropertyNameAndSortOrder(x)
                 )
                 .Select(x =>
                 (
-                    propertyInfo: ReflectionUtilities.GetPropertyInfo(typeof(TEntity), x.propertyName),
+                    propertyInfo: _reflectionUtilities.GetPropertyInfo(typeof(TEntity), x.propertyName),
                     x.descending
                 ))
                 .Where(tuple => tuple.propertyInfo != null)

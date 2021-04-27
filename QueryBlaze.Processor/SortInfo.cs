@@ -18,7 +18,7 @@ namespace QueryBlaze.Processor
 
         public override bool Equals(object? obj)
         {
-            return obj is SortInfo info && 
+            return obj is SortInfo info &&
                 info.AccessorInfo == AccessorInfo;
         }
 

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace QueryBlaze.Processor
+namespace QueryBlaze.Processor.Abstractions
 {
     public interface ISortQueryProcessor
     {
