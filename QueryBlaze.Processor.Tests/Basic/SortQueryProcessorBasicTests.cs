@@ -8,7 +8,7 @@ namespace QueryBlaze.Processor.Tests.Basic
 
     public class SortQueryProcessorTests : IDisposable
     {
-        private DataFixture _dataFixture;
+        private readonly DataFixture _dataFixture;
 
         public SortQueryProcessorTests()
         {

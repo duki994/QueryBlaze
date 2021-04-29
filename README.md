@@ -1,6 +1,6 @@
 # QueryBlaze
 
-QueryBlaze is simple utility library for dynamic sorting/orderin of an IQueryable<T>
+QueryBlaze is simple utility library for dynamic sorting/ordering of an IQueryable<T>
  
 
 ## Contributing
@@ -13,7 +13,7 @@ QueryBlaze is simple utility library for dynamic sorting/orderin of an IQueryabl
  
 ## History
  
-Version 0.1 (2021-04-27) - adding Devise and core Rails functionality
+Version 0.1.1 (2021-04-29) - Add nested sorting
  
 ## Credits
  

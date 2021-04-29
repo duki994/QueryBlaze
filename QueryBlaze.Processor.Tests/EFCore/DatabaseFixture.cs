@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QueryableProcessor.Data.Context;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 
 namespace QueryBlaze.Processor.Tests.EFCore
@@ -13,7 +11,7 @@ namespace QueryBlaze.Processor.Tests.EFCore
         private static readonly object _lock = new object();
         private static bool _databaseInitialized;
 
-        private IEnumerable<Person> _people;
+        private readonly IEnumerable<Person> _people;
 
         public DatabaseFixture()
         {
