@@ -9,6 +9,10 @@ namespace QueryableProcessor.Data.Context
     {
         public DbSet<Person> People => Set<Person>();
 
+        public TestDbContext(DbContextOptions<TestDbContext> options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring([NotNull] DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -33,9 +37,7 @@ namespace QueryableProcessor.Data.Context
         public string Name { get; set; } = string.Empty;
         public string Surname { get; set; } = string.Empty;
 
-
-        public int? AddressId { get; set; }
-        public Address? Address { get; set; }
+        public Address Address { get; set; } = null!;
     }
 
     public class Address
@@ -44,6 +46,9 @@ namespace QueryableProcessor.Data.Context
 
         public string Street { get; set; } = string.Empty;
         public string ZipCode { get; set; } = string.Empty;
+
+        public int PersonId { get; set; }
+        public Person Person { get; set; } = null!;
     }
 
     public class AddressConfig : IEntityTypeConfiguration<Address>
@@ -51,27 +56,27 @@ namespace QueryableProcessor.Data.Context
         public void Configure(EntityTypeBuilder<Address> builder)
         {
             builder.HasOne<Person>()
-                .WithOne(x => x.Address!)
-                .IsRequired(false);
+                .WithOne(x => x.Address)
+                .IsRequired();
 
-            builder.HasData(new Address
-            {
-                Id = 1,
-                Street = "Street1",
-                ZipCode = "1242"
-            },
-            new Address
-            {
-                Id = 2,
-                Street = "Street 2",
-                ZipCode = "34435"
-            },
-             new Address
-             {
-                 Id = 3,
-                 Street = "Street 4",
-                 ZipCode = "87577"
-             });
+            //builder.HasData(new Address
+            //{
+            //    Id = 1,
+            //    Street = "Street1",
+            //    ZipCode = "1242"
+            //},
+            //new Address
+            //{
+            //    Id = 2,
+            //    Street = "Street 2",
+            //    ZipCode = "34435"
+            //},
+            // new Address
+            // {
+            //     Id = 3,
+            //     Street = "Street 4",
+            //     ZipCode = "87577"
+            // });
         }
     }
 
@@ -80,27 +85,28 @@ namespace QueryableProcessor.Data.Context
         public void Configure(EntityTypeBuilder<Person> builder)
         {
             builder.HasOne(x => x.Address)
-                .WithOne();
+                .WithOne(x => x.Person)
+                .HasForeignKey<Address>(x => x.PersonId)
+                .IsRequired();
 
-            builder.HasData(new Person()
-            {
-                Id = 1,
-                Name = "Tutuban",
-                Surname = "Rumunski"
-            },
-            new Person()
-            {
-                Id = 2,
-                Name = "Tutuban 2",
-                Surname = "Madjarski"
-            },
-            new Person()
-            {
-                Id = 3,
-                Name = "Tutuban 3",
-                Surname = "Bugarski"
-            });
-
+            //builder.HasData(new Person()
+            //{
+            //    Id = 1,
+            //    Name = "Tutuban",
+            //    Surname = "Rumunski"
+            //},
+            //new Person()
+            //{
+            //    Id = 2,
+            //    Name = "Tutuban 2",
+            //    Surname = "Madjarski"
+            //},
+            //new Person()
+            //{
+            //    Id = 3,
+            //    Name = "Tutuban 3",
+            //    Surname = "Bugarski"
+            //});
         }
     }
 }

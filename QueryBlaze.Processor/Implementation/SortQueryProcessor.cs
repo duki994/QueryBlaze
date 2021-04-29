@@ -8,13 +8,11 @@ namespace QueryBlaze.Processor.Implementation
     public class SortQueryProcessor : ISortQueryProcessor
     {
         private readonly SortProcessorOptions _options;
-        private readonly ICustomPropertyMapper _customPropertyMapper;
         private readonly ReflectionUtilities _reflectionUtilities;
 
-        public SortQueryProcessor(ISortProcessorOptionsProvider provider, ICustomPropertyMapper customPropertyMapper)
+        public SortQueryProcessor(ISortProcessorOptionsProvider provider)
         {
             _options = provider.Provide();
-            _customPropertyMapper = customPropertyMapper;
             _reflectionUtilities = new ReflectionUtilities(provider);
         }
 
@@ -29,12 +27,12 @@ namespace QueryBlaze.Processor.Implementation
 
             foreach (var info in infos)
             {
-                LambdaExpression lambda = _reflectionUtilities.CreateExpression(typeof(TEntity), info.AccessorInfo);
+                LambdaExpression lambda = _reflectionUtilities.CreateExpression(typeof(TEntity), info.PropertyName);
 
                 var newExpression = Expression.Call(
                     typeof(Queryable),
                     _reflectionUtilities.GetOrderMethodName(info),
-                    new[] { typeof(TEntity), info.AccessorInfo.PropertyType },
+                    new[] { typeof(TEntity), lambda.ReturnType },
                     query.Expression,
                     Expression.Quote(lambda)
                 );
@@ -47,21 +45,8 @@ namespace QueryBlaze.Processor.Implementation
 
         private ICollection<SortInfo> GetSortPropertyInfos<TEntity>(SortParams sortParams) =>
             sortParams.SortProperties
-                .Select(
-                    x => _customPropertyMapper.SortNameToPropertyNameMap.TryGetValue(new MapperKey(x, typeof(TEntity)), out string propName)
-                            ? propName
-                            : x
-                )
-                .Select(
-                    x => _reflectionUtilities.GetPropertyNameAndSortOrder(x)
-                )
-                .Select(x =>
-                (
-                    propertyInfo: _reflectionUtilities.GetPropertyInfo(typeof(TEntity), x.propertyName),
-                    x.descending
-                ))
-                .Where(tuple => tuple.propertyInfo != null)
-                .Select((x, index) => new SortInfo(x.propertyInfo!, index == 0, x.descending))
+                .Select(x => _reflectionUtilities.GetPropertyNameAndSortOrder(x))
+                .Select((x, index) => new SortInfo(x.propertyName, index == 0, x.descending))
                 .ToList();
     }
 }

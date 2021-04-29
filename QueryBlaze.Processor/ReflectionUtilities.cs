@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace QueryBlaze.Processor
 {
-    internal class ReflectionUtilities
+    public class ReflectionUtilities
     {
         private readonly ISortProcessorOptionsProvider _optionsProvider;
 
@@ -16,22 +16,37 @@ namespace QueryBlaze.Processor
             _optionsProvider = optionsProvider;
         }
 
-        /// <summary>
-        /// Finds property info regardless of <paramref name="propertyName"/> casing
-        /// </summary>
-        /// <param name="elementType"></param>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        public PropertyInfo? GetPropertyInfo(Type elementType, string propertyName)
-        {
-            return elementType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-        }
-
         public LambdaExpression CreateExpression(Type elementType, PropertyInfo info)
         {
             var parameter = Expression.Parameter(elementType, "x");
 
             var body = Expression.Property(parameter, info);
+
+            return Expression.Lambda(body, parameter);
+        }
+
+        public LambdaExpression CreateExpression(Type elementType, string propertyName)
+        {
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
+
+            var parameter = Expression.Parameter(elementType);
+
+            var names = propertyName.Split(_optionsProvider.Provide().NestedPropSeparator);
+
+            var pInfo = elementType.GetProperty(names[0], flags);
+            var body = Expression.Property(parameter, pInfo);
+
+            for (int i = 1; i < names.Length; i++)
+            {
+                pInfo = elementType.GetProperty(names[i], flags);
+                if (pInfo is null)
+                {
+                    // TODO: Try resolving this 'break of control flow' via functional 'Option<T>' type instead of exceptions or 'Result<T>' type that includes error info
+                    throw new BadMemberAccessException($"'{names[i]}' is not member of type '{body.Type}'. Full property name passed is '{propertyName}'");
+                }
+
+                body = Expression.Property(body, pInfo);
+            }
 
             return Expression.Lambda(body, parameter);
         }

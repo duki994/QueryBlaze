@@ -30,7 +30,7 @@ namespace QueryBlaze.Processor.Tests.Basic
                 }
             };
 
-        public SortQueryProcessor Processor { get; } = new SortQueryProcessor(new DefaultSortProcessorOptionsProvider(), new DefaultCustomPropertyMapper());
+        public SortQueryProcessor Processor { get; } = new SortQueryProcessor(new DefaultSortProcessorOptionsProvider());
 
         protected virtual void Dispose(bool disposing)
         {

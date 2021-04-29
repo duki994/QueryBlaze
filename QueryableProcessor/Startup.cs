@@ -19,23 +19,16 @@ namespace QueryableProcessor
 
         public IConfiguration Configuration { get; }
 
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Called by framework")]
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
             services.AddTransient<ISortQueryProcessor, SortQueryProcessor>();
-            services.AddTransient<ICustomPropertyMapper, DefaultCustomPropertyMapper>();
             services.AddTransient<ISortProcessorOptionsProvider, DefaultSortProcessorOptionsProvider>();
 
             services.AddDbContext<TestDbContext>();
         }
 
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Called by framework")]
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryableProcessor", "Query
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryBlaze.Processor", "QueryBlaze.Processor\QueryBlaze.Processor.csproj", "{9CBB9196-9A3D-4614-812E-D6C40A80F4FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryBlaze.Processor.Tests", "QueryBlaze.Processor.Tests\QueryBlaze.Processor.Tests.csproj", "{4705A97F-EF1A-408F-BB6C-50C6FF6C9372}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryBlaze.Processor.Tests", "QueryBlaze.Processor.Tests\QueryBlaze.Processor.Tests.csproj", "{4705A97F-EF1A-408F-BB6C-50C6FF6C9372}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
