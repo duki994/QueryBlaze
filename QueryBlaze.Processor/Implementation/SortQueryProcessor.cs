@@ -1,4 +1,5 @@
 ﻿using QueryBlaze.Processor.Abstractions;
+using QueryBlaze.Processor.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,13 +8,11 @@ namespace QueryBlaze.Processor.Implementation
 {
     public class SortQueryProcessor : ISortQueryProcessor
     {
-        private readonly SortProcessorOptions _options;
-        private readonly ReflectionUtilities _reflectionUtilities;
+        private readonly LambdaExpressionFactory _expressionFactory;
 
         public SortQueryProcessor(ISortProcessorOptionsProvider provider)
         {
-            _options = provider.Provide();
-            _reflectionUtilities = new ReflectionUtilities(provider);
+            _expressionFactory = new LambdaExpressionFactory(provider);
         }
 
         public IQueryable<TEntity> ApplySorting<TEntity>(IQueryable<TEntity> query, SortParams parameters)
@@ -26,12 +25,12 @@ namespace QueryBlaze.Processor.Implementation
             var infos = GetSortPropertyInfos<TEntity>(parameters);
 
             foreach (var info in infos)
-            {
-                LambdaExpression lambda = _reflectionUtilities.CreateExpression(typeof(TEntity), info.PropertyName);
+            { 
+                var lambda = _expressionFactory.CreateExpression(typeof(TEntity), info.PropertyName);
 
                 var newExpression = Expression.Call(
                     typeof(Queryable),
-                    _reflectionUtilities.GetOrderMethodName(info),
+                    info.GetOrderMethodName(),
                     new[] { typeof(TEntity), lambda.ReturnType },
                     query.Expression,
                     Expression.Quote(lambda)
@@ -45,7 +44,7 @@ namespace QueryBlaze.Processor.Implementation
 
         private ICollection<SortInfo> GetSortPropertyInfos<TEntity>(SortParams sortParams) =>
             sortParams.SortProperties
-                .Select(x => _reflectionUtilities.GetPropertyNameAndSortOrder(x))
+                .Select(x => _expressionFactory.ParseNameAndOrder(x))
                 .Select((x, index) => new SortInfo(x.propertyName, index == 0, x.descending))
                 .ToList();
     }

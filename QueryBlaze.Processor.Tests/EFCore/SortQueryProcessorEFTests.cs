@@ -14,7 +14,7 @@ namespace QueryBlaze.Processor.Tests.EFCore
 
         public static ISortProcessorOptionsProvider OptionsProvider { get; } = new DefaultSortProcessorOptionsProvider();
         public static SortQueryProcessor Processor { get; } = new SortQueryProcessor(OptionsProvider);
-        public static ReflectionUtilities Utils { get; } = new ReflectionUtilities(OptionsProvider);
+        public static LambdaExpressionFactory Utils { get; } = new LambdaExpressionFactory(OptionsProvider);
 
         [Fact]
         public void Should_Sort_Ascending_When_Has_Sort_Property_And_Sorting_Indicator_Missing()
@@ -98,8 +98,7 @@ namespace QueryBlaze.Processor.Tests.EFCore
             p.SortProperties.Add("address.Streetsss-");
 
 
-            var ex = Assert.Throws<BadMemberAccessException>(() => Processor.ApplySorting(queryable, p));
-            Assert.Contains("Full property name passed is 'address.Streetsss'", ex.Message);
+            Assert.Throws<BadMemberAccessException>(() => Processor.ApplySorting(queryable, p));
         }
     }
 }
