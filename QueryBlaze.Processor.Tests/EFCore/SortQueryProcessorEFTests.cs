@@ -13,8 +13,7 @@ namespace QueryBlaze.Processor.Tests.EFCore
         public SortQueryProcessorEFTests(DatabaseFixture fixture) => Fixture = fixture;
 
         public static ISortProcessorOptionsProvider OptionsProvider { get; } = new DefaultSortProcessorOptionsProvider();
-        public static SortQueryProcessor Processor { get; } = new SortQueryProcessor(OptionsProvider);
-        public static LambdaExpressionFactory Utils { get; } = new LambdaExpressionFactory(OptionsProvider);
+        public static SortQueryProcessor Processor { get; } = new SortQueryProcessor(new InputParser(OptionsProvider), new LambdaExpressionFactory(OptionsProvider));
 
         [Fact]
         public void Should_Sort_Ascending_When_Has_Sort_Property_And_Sorting_Indicator_Missing()

@@ -25,14 +25,11 @@ namespace QueryBlaze.Processor
                 .AddParameter(elementType)
                 .AccessProperty(names[0]);
 
-            foreach (var name in names.Skip(1))
-            {
-                initial = initial.ThenProperty(name);
-            }
+            initial = names.Skip(1).Aggregate(initial, (builder, prop) => builder.ThenProperty(prop));
 
-
-            var final = initial.FinishAccess();
-            var result = final.Build();
+            var result = initial
+                .FinishAccess()
+                .Build();
 
             if (!result.IsSuccessfull)
             {
@@ -40,20 +37,6 @@ namespace QueryBlaze.Processor
             }
 
             return result.Result;
-        }
-
-        public (string propertyName, bool descending) ParseNameAndOrder(string sortPropertyParameter)
-        {
-            var opts = _optionsProvider.Provide();
-            string name = sortPropertyParameter;
-
-            var indicatorIndex = sortPropertyParameter.IndexOf(opts.DescendingIndicator, StringComparison.Ordinal);
-            bool descending = indicatorIndex != -1;
-
-            var regex = new Regex(opts.StripCharsPattern);
-            name = regex.Replace(name, string.Empty);
-
-            return (name, descending);
         }
     }
 }

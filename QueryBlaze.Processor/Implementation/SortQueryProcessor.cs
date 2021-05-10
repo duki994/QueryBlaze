@@ -9,10 +9,14 @@ namespace QueryBlaze.Processor.Implementation
     public class SortQueryProcessor : ISortQueryProcessor
     {
         private readonly LambdaExpressionFactory _expressionFactory;
+        private readonly IInputParser _inputParser;
 
-        public SortQueryProcessor(ISortProcessorOptionsProvider provider)
+        public SortQueryProcessor(
+            IInputParser inputParser, 
+            LambdaExpressionFactory expressionFactory)
         {
-            _expressionFactory = new LambdaExpressionFactory(provider);
+            _inputParser = inputParser;
+            _expressionFactory = expressionFactory;
         }
 
         public IQueryable<TEntity> ApplySorting<TEntity>(IQueryable<TEntity> query, SortParams parameters)
@@ -44,8 +48,8 @@ namespace QueryBlaze.Processor.Implementation
 
         private ICollection<SortInfo> GetSortPropertyInfos<TEntity>(SortParams sortParams) =>
             sortParams.SortProperties
-                .Select(x => _expressionFactory.ParseNameAndOrder(x))
-                .Select((x, index) => new SortInfo(x.propertyName, index == 0, x.descending))
+                .Select(x => _inputParser.ParseNameAndOrder(x))
+                .Select((x, index) => new SortInfo(x.PropertyName, index == 0, x.Descending))
                 .ToList();
     }
 }

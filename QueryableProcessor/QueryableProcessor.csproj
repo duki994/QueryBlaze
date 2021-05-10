@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QueryBlaze.Processor\QueryBlaze.Processor.csproj" />
+    <ProjectReference Include="..\QueryBlaze.Processor.Extensions.DependencyInjection\QueryBlaze.Processor.Extensions.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

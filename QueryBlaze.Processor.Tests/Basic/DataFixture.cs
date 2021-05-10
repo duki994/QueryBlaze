@@ -6,6 +6,11 @@ namespace QueryBlaze.Processor.Tests.Basic
 {
     public class DataFixture : IDisposable
     {
+        public DataFixture()
+        {
+
+        }
+
         public IEnumerable<DataContainer> Data { get; set; } = new DataContainer[]
             {
                 new()
@@ -30,7 +35,7 @@ namespace QueryBlaze.Processor.Tests.Basic
                 }
             };
 
-        public SortQueryProcessor Processor { get; } = new SortQueryProcessor(new DefaultSortProcessorOptionsProvider());
+        public SortQueryProcessor Processor { get; } = new SortQueryProcessor(new InputParser(new DefaultSortProcessorOptionsProvider()), new LambdaExpressionFactory(new DefaultSortProcessorOptionsProvider()));
 
         protected virtual void Dispose(bool disposing)
         {

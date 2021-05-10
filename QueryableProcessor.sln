@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryBlaze.Processor", "Que
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryBlaze.Processor.Tests", "QueryBlaze.Processor.Tests\QueryBlaze.Processor.Tests.csproj", "{4705A97F-EF1A-408F-BB6C-50C6FF6C9372}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{1D2E1FD3-9B43-465F-A927-FE2C21B889DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{1D2E1FD3-9B43-465F-A927-FE2C21B889DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryBlaze.Processor.Extensions.DependencyInjection", "QueryBlaze.Processor.Extensions.DependencyInjection\QueryBlaze.Processor.Extensions.DependencyInjection.csproj", "{6A09107C-579F-4296-BFE4-016392D8A820}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1D2E1FD3-9B43-465F-A927-FE2C21B889DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D2E1FD3-9B43-465F-A927-FE2C21B889DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D2E1FD3-9B43-465F-A927-FE2C21B889DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A09107C-579F-4296-BFE4-016392D8A820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A09107C-579F-4296-BFE4-016392D8A820}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A09107C-579F-4296-BFE4-016392D8A820}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A09107C-579F-4296-BFE4-016392D8A820}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
