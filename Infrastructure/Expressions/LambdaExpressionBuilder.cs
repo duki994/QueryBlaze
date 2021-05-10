@@ -35,7 +35,7 @@ namespace Infrastructure.Expressions
     public class BuilderResult
     {
         public IList<string> Errors { get; set; } = new List<string>();
-        
+
         public bool IsSuccessfull { get; set; }
 
         public LambdaExpression Result { get; set; } = Expression.Lambda(Expression.Default(typeof(void)), false);

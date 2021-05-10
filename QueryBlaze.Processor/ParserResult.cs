@@ -2,7 +2,7 @@
 {
     public class ParserResult
     {
-        public string PropertyName { get;}
+        public string PropertyName { get; }
         public bool Descending { get; }
 
         public ParserResult(string propertyName, bool descending)

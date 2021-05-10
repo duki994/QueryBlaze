@@ -12,7 +12,7 @@ namespace QueryBlaze.Processor.Implementation
         private readonly IInputParser _inputParser;
 
         public SortQueryProcessor(
-            IInputParser inputParser, 
+            IInputParser inputParser,
             LambdaExpressionFactory expressionFactory)
         {
             _inputParser = inputParser;
@@ -29,7 +29,7 @@ namespace QueryBlaze.Processor.Implementation
             var infos = GetSortPropertyInfos<TEntity>(parameters);
 
             foreach (var info in infos)
-            { 
+            {
                 var lambda = _expressionFactory.CreateExpression(typeof(TEntity), info.PropertyName);
 
                 var newExpression = Expression.Call(
